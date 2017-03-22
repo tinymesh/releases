@@ -5,7 +5,7 @@ function layout($file) {
    <html>
       <head>
         <title>Tinymesh Connector</title>
-        <link href="./style.css" rel="stylesheet" />
+        <link href="/style.css" rel="stylesheet" />
       </head>
 
      <body>

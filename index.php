@@ -4,7 +4,7 @@
 //   - /:ent/:repo[/:os[/:arch[/:tag]]]
 
 //$uri = trim($_SERVER['REQUEST_URI'], '/');
-$uri = trim(isset($_GET['path']) ? $_GET['path'] : '', '/');
+$uri = trim(isset($_GET['path']) ? $_GET['path'] : $_SERVER['REQUEST_URI'], '/');
 $parts = explode('/', $uri);
 
 class Args {
@@ -30,19 +30,23 @@ class Args {
   }
 
   public function link(array $args = null) {
-    $scriptdir = dirname($_SERVER['SCRIPT_FILENAME']);
-
-    // script /var/www/connector/index.php
-    // DOCUMENT_ROOT /var/www
-    // DOCUMENT_URI /connector/index.php
-    $docroot = substr($scriptdir, strlen($_SERVER['DOCUMENT_ROOT']));
+    //$scriptdir = dirname($_SERVER['SCRIPT_FILENAME']);
+    //
+    //// script /var/www/connector/index.php
+    //// DOCUMENT_ROOT /var/www
+    //// DOCUMENT_URI /connector/index.php
+    //$docroot = substr($scriptdir, strlen($_SERVER['DOCUMENT_ROOT']));
 
     $args = (object) array_merge((array) $this, (array) $args);
 
-    $parts = array($args->entity, $args->repo, $args->platform, $args->arch, $args->tag);
-    $path = $docroot . '?path=' . join($parts, "/");
+    //var_dump(array("docroot" => $docroot, "scriptdir" => $scriptdir));
 
-    return $path;
+    $parts = array($args->entity, $args->repo, $args->platform, $args->arch, $args->tag);
+    if (!isset($_GET['path'])) {
+        return '/' . join($parts, '/');
+    } else {
+       return './?path=' . join($parts, "/");
+    }
   }
 }
 
